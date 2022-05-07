@@ -31,7 +31,7 @@ func newHTTPServer() *httpServer {
 }
 
 type ProduceResponse struct {
-	Offset uint64 `json: "offset"`
+	Offset uint64 `json:"offset"`
 }
 
 type ProduceRequest struct {
