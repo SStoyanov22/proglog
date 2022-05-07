@@ -38,7 +38,7 @@ func newStore(f *os.File) (*store, error) {
 	}, nil
 }
 
-/***
+/*
 Append([]byte) persists the given bytes to the store. We write the length of the
 record so that, when we read the record, we know how many bytes to read.
 We write to the buffered writer instead of directly to the file to reduce the
@@ -47,7 +47,7 @@ small records, this would help a lot. Then we return the number of bytes
 written, which similar Go APIs conventionally do, and the position where the
 store holds the record in its file. The segment will use this position when it
 creates an associated index entry for this record.
-***/
+*/
 func (s *store) Append(p []byte) (n uint64, pos uint64, err error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -69,7 +69,7 @@ func (s *store) Append(p []byte) (n uint64, pos uint64, err error) {
 	return uint64(w), pos, nil
 }
 
-/****
+/*
 Read(pos uint64) returns the record stored at the given position. First it flushes
 the writer buffer, in case we’re about to try to read a record that the buffer
 hasn’t flushed to disk yet. We find out how many bytes we have to read to
@@ -77,7 +77,7 @@ get the whole record, and then we fetch and return the record. The compiler
 allocates byte slices that don’t escape the functions they’re declared in on the
 stack. A value escapes when it lives beyond the lifetime of the function call—if
 you return the value, for example.
-***/
+*/
 func (s *store) Read(pos uint64) ([]byte, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -98,10 +98,10 @@ func (s *store) Read(pos uint64) ([]byte, error) {
 	return b, nil
 }
 
-/***
+/*
 ReadAt(p []byte, off int64) reads len(p) bytes into p beginning at the off offset in the
 store’s file. It implements io.ReaderAt on the store type.
-***/
+*/
 func (s *store) ReadAt(p []byte, off int64) (int, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
