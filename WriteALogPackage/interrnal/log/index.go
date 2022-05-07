@@ -122,4 +122,13 @@ then encode the offset and position and write them to the memory-mapped
 file. Then we increment the position where the next write will go.
 */
 func (i *index) Write(off uint32, pos uint64) error {
+	if uint64(len(i.mmap)) < i.size+entWidth {
+		return io.EOF
+	}
+
+	enc.PutUint32(i.mmap[i.size:i.size+offWidth], off)
+	enc.PutUint64(i.mmap[i.size+offWidth:i.size+entWidth], pos)
+	i.size += uint64(entWidth)
+
+	return nil
 }
