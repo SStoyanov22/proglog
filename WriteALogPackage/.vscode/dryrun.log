@@ -1,0 +1,10 @@
+make.exe --dry-run --always-make --keep-going --print-directory
+make: Entering directory 'd:/dev/Go/src/github.com/SStoyanov22/proglog/WriteALogPackage'
+protoc api/v1/*.proto \
+			--go_out=. \
+			--go-grpc_out=. \
+			--go_opt=paths=source_relative \
+			--go-grpc_opt=paths=source_relative \
+			--proto_path=.
+make: Leaving directory 'd:/dev/Go/src/github.com/SStoyanov22/proglog/WriteALogPackage'
+ 
