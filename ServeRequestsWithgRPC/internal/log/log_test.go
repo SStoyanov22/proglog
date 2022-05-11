@@ -29,10 +29,12 @@ func TestLog(t *testing.T) {
 			dir, err := ioutil.TempDir("", "store-test")
 			require.NoError(t, err)
 			defer os.RemoveAll(dir)
+
 			c := Config{}
 			c.Segment.MaxStoreBytes = 32
 			log, err := NewLog(dir, c)
 			require.NoError(t, err)
+
 			fn(t, log)
 		})
 	}
@@ -85,14 +87,17 @@ func testInitExisting(t *testing.T, o *Log) {
 		require.NoError(t, err)
 	}
 	require.NoError(t, o.Close())
+
 	off, err := o.LowestOffset()
 	require.NoError(t, err)
 	require.Equal(t, uint64(0), off)
 	off, err = o.HighestOffset()
 	require.NoError(t, err)
 	require.Equal(t, uint64(2), off)
+
 	n, err := NewLog(o.Dir, o.Config)
 	require.NoError(t, err)
+
 	off, err = n.LowestOffset()
 	require.NoError(t, err)
 	require.Equal(t, uint64(0), off)
@@ -112,9 +117,11 @@ func testReader(t *testing.T, log *Log) {
 	off, err := log.Append(append)
 	require.NoError(t, err)
 	require.Equal(t, uint64(0), off)
+
 	reader := log.Reader()
 	b, err := ioutil.ReadAll(reader)
 	require.NoError(t, err)
+
 	read := &api.Record{}
 	err = proto.Unmarshal(b[lenWidth:], read)
 	require.NoError(t, err)
@@ -133,8 +140,10 @@ func testTruncate(t *testing.T, log *Log) {
 		_, err := log.Append(append)
 		require.NoError(t, err)
 	}
+
 	err := log.Truncate(1)
 	require.NoError(t, err)
+
 	_, err = log.Read(0)
 	require.Error(t, err)
 }
